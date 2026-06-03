@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Form } from "../../components/forms/Form";
 
-
+// hola
 export const Register = () => {
   const [registered, setRegistered] = useState(false);
 
