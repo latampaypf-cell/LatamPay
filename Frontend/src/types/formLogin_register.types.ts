@@ -9,7 +9,6 @@ export type RegisterFormErrors = {
 };
 
 export type FormProps = {
-  endpoint: string;
   onSuccess?: (data: unknown) => void;
   submitLabel?: string;
 };
