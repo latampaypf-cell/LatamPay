@@ -1,21 +1,6 @@
 import { useState } from "react";
+import { FormProps, RegisterFormErrors, RegisterFormValues } from "../../types/formLogin_register.types";
 
-export type RegisterFormValues = {
-  email: string;
-  password: string;
-};
-
-// prueba nueva
-type RegisterFormErrors = {
-  email?: string;
-  password?: string;
-};
-
-type FormProps = {
-  endpoint: string;
-  onSuccess?: (data: unknown) => void;
-  submitLabel?: string;
-};
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
