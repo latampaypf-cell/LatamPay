@@ -3,7 +3,7 @@ import type { FormProps, RegisterFormErrors, RegisterFormValues } from "../../ty
 
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const REGISTER_ENDPOINT = `${import.meta.env.VITE_API_URL ?? ""}/auth/register`;
+const DEFAULT_REGISTER_ENDPOINT = `${import.meta.env.VITE_API_URL ?? ""}/api/auth/register`;
 
 function validateEmail(value: string): string | undefined {
   const trimmed = value.trim();
@@ -26,6 +26,10 @@ function validatePassword(value: string): string | undefined {
 export function Form({
   onSuccess,
   submitLabel = "Crear cuenta",
+  endpoint = DEFAULT_REGISTER_ENDPOINT,
+  children,
+  extraValues,
+  disableSubmit = false,
 }: FormProps) {
   const [values, setValues] = useState<RegisterFormValues>({ email: "", password: "" });
   const [errors, setErrors] = useState<RegisterFormErrors>({});
@@ -71,23 +75,10 @@ export function Form({
 
     setIsSubmitting(true);
     try {
-      // ============================================================
-      // ⚠️ MOCK TEMPORAL — BORRAR CUANDO EL BACKEND ESTÉ LISTO ⚠️
-      // Simula una respuesta exitosa del backend para poder probar
-      // el flujo completo de registro + auto-login sin servidor.
-      // Para restaurar: borrar este bloque y descomentar el de abajo.
-      // ============================================================
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const data = { id: "mock-id", email: payload.email };
-      // ============================================================
-      // FIN DEL MOCK TEMPORAL
-      // ============================================================
-
-      /* ===== CÓDIGO REAL — DESCOMENTAR CUANDO HAYA BACKEND =====
-      const response = await fetch(REGISTER_ENDPOINT, {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...extraValues, ...payload }),
       });
 
       const data = await response.json().catch(() => null);
@@ -100,7 +91,6 @@ export function Form({
         setServerError(message);
         return;
       }
-      ===== FIN CÓDIGO REAL ===== */
 
       setValues({ email: "", password: "" });
       setTouched({ email: false, password: false });
@@ -120,6 +110,8 @@ export function Form({
         void handleSubmit();
       }}
     >
+      {children}
+
       <div>
         <label htmlFor="register-email">Email</label>
         <input
@@ -170,7 +162,7 @@ export function Form({
         </p>
       )}
 
-      <button type="submit" disabled={isSubmitting}>
+      <button type="submit" disabled={isSubmitting || disableSubmit}>
         {isSubmitting ? "Enviando..." : submitLabel}
       </button>
     </form>

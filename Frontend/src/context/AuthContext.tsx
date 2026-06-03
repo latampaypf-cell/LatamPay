@@ -1,11 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { apiLogin, apiMe } from "../services/auth.api";
+import type { ApiUser } from "../services/auth.api";
 
 const TOKEN_STORAGE_KEY = "latampay.auth.token";
 
-export type AuthUser = {
-  email: string;
-};
+export type AuthUser = ApiUser;
 
 export type AuthContextValue = {
   token: string | null;
@@ -29,19 +29,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const stored = localStorage.getItem(TOKEN_STORAGE_KEY);
-    if (stored) {
-      setToken(stored);
-      // TODO: reemplazar con GET /api/users/me cuando el backend esté listo
-      setUser({ email: "mock@latampay.dev" });
+    if (!stored) {
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    apiMe(stored)
+      .then((apiUser) => {
+        setToken(stored);
+        setUser(apiUser);
+      })
+      .catch(() => {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        setToken(null);
+        setUser(null);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const login = useCallback(async (email: string, _password: string) => {
-    const mockToken = `mock-token-${Date.now()}`;
-    localStorage.setItem(TOKEN_STORAGE_KEY, mockToken);
-    setToken(mockToken);
-    setUser({ email });
+  const login = useCallback(async (email: string, password: string) => {
+    const { user: apiUser, token: apiToken } = await apiLogin(email, password);
+    localStorage.setItem(TOKEN_STORAGE_KEY, apiToken);
+    setToken(apiToken);
+    setUser(apiUser);
   }, []);
 
   const logout = useCallback(() => {
