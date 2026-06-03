@@ -6,7 +6,7 @@ export type RegisterFormValues = {
 };
 
 
-type RegisterFormError = {
+type RegisterFormErrors = {
   email?: string;
   password?: string;
 };
@@ -43,7 +43,7 @@ export function Form({
   submitLabel = "Crear cuenta",
 }: FormProps) {
   const [values, setValues] = useState<RegisterFormValues>({ email: "", password: "" });
-  const [errors, setErrors] = useState<RegisterFormError>({});
+  const [errors, setErrors] = useState<RegisterFormErrors>({});
   const [touched, setTouched] = useState<Record<keyof RegisterFormValues, boolean>>({
     email: false,
     password: false,
@@ -51,7 +51,7 @@ export function Form({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  const runValidation = (next: RegisterFormValues): RegisterFormError => ({
+  const runValidation = (next: RegisterFormValues): RegisterFormErrors => ({
     email: validateEmail(next.email),
     password: validatePassword(next.password),
   });
