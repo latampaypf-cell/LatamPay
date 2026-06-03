@@ -7,29 +7,70 @@ Documentación del flujo de navegación y control de acceso.
 ```
 src/
 ├── context/
-│   └── AuthContext.tsx       # Estado global de autenticación
+│   └── AuthContext.tsx          # Estado global de autenticación
 ├── layouts/
-│   └── PrivateLayout.tsx     # Header común para rutas privadas
+│   └── PrivateLayout.tsx        # Wrapper de rutas privadas (header + Outlet)
+├── components/
+│   └── navbar/
+│       └── PrivateNavbar.tsx    # Barra de navegación para usuarios logueados
 ├── routes/
-│   ├── AppRouter.tsx         # Definición central de rutas
-│   ├── paths.ts              # Constantes de paths (única fuente)
+│   ├── AppRouter.tsx            # Definición central de rutas
+│   ├── paths.ts                 # Constantes de paths (única fuente)
+│   ├── nav.ts                   # Items de navegación reutilizables
 │   └── guards/
-│       ├── PrivateRoute.tsx  # Bloquea rutas privadas
-│       └── PublicRoute.tsx   # Bloquea rutas públicas a logueados
-└── pages/                    # Componentes-pantalla
+│       ├── PrivateRoute.tsx     # Bloquea rutas privadas
+│       └── PublicRoute.tsx      # Bloquea rutas públicas a logueados
+└── pages/                       # Componentes-pantalla
 ```
 
 ## Layout privado
 
-Todas las rutas privadas se renderizan dentro de `PrivateLayout`, que provee un header común con el email del usuario y el botón "Cerrar sesión". Las pantallas privadas solo se preocupan por su contenido — el chrome de la app lo pone el layout.
+Todas las rutas privadas se renderizan dentro de `PrivateLayout`, que monta el `PrivateNavbar` arriba y un `<Outlet />` para el contenido. Las pantallas privadas solo se preocupan por su contenido — el chrome de la app lo pone el layout.
 
 El orden de anidado en el router es:
 
 ```
-<PrivateRoute>   ← decide si dejar pasar
-  <PrivateLayout>  ← pinta el header
+<PrivateRoute>     ← decide si dejar pasar
+  <PrivateLayout>  ← pinta navbar + Outlet
     <Dashboard />  ← contenido de la ruta
 ```
+
+## PrivateNavbar
+
+Barra de navegación visible **solo en rutas privadas** (se monta desde `PrivateLayout`). Reúne tres responsabilidades:
+
+- **Identidad**: brand clickeable que lleva al dashboard.
+- **Navegación interna**: lista de links a las rutas privadas (vía `NavLink`, marca la activa con `className="active"`).
+- **Sesión**: muestra el email del usuario y expone el botón "Cerrar sesión".
+
+### Props
+
+| Prop | Tipo | Default | Descripción |
+|---|---|---|---|
+| `items` | `NavItem[]` | `privateNavItems` | Items a renderizar. Cambiarlo permite reusar el navbar en otros contextos (ej. zona admin). |
+| `brand` | `string` | `"LatamPay"` | Texto del logo. |
+
+### Items de navegación
+
+Centralizados en `routes/nav.ts`:
+
+```ts
+export const privateNavItems: NavItem[] = [
+  { label: "Dashboard", path: paths.dashboard },
+];
+```
+
+Para sumar un link nuevo al menú: agregar una entrada a este array. El navbar se actualiza solo.
+
+### Estado responsive
+
+La mecánica del menú hamburguesa (`isMenuOpen`, `toggleMenu`, `closeMenu`, `aria-expanded`) **ya está implementada**, pero hoy no hay CSS. Cuando se agregue `PrivateNavbar.css`:
+
+1. Ocultar `.private-navbar__toggle` con `@media (min-width: 768px)`.
+2. Ocultar `.private-navbar__menu` en mobile cuando NO tenga `.is-open`.
+3. Estilar `.private-navbar__menu .active` (lo aplica `NavLink` solo).
+
+No hay que tocar JS — solo CSS.
 
 ## AuthContext
 
@@ -84,17 +125,20 @@ Ambos son **layout routes**: se usan envolviendo rutas hijas con `<Outlet />`.
 
 ### Privada
 
-```tsx
-// AppRouter.tsx
-<Route element={<PrivateRoute />}>
-  <Route element={<PrivateLayout />}>
-    <Route path={paths.dashboard} element={<Dashboard />} />
-    <Route path={paths.profile}   element={<Profile />} />   // ← nueva
-  </Route>
-</Route>
-```
-
-Y agregar `profile: "/profile"` en `paths.ts`.
+1. Sumar el path en `paths.ts`: `profile: "/profile"`.
+2. Sumar la ruta en `AppRouter.tsx`:
+   ```tsx
+   <Route element={<PrivateRoute />}>
+     <Route element={<PrivateLayout />}>
+       <Route path={paths.dashboard} element={<Dashboard />} />
+       <Route path={paths.profile}   element={<Profile />} />   // ← nueva
+     </Route>
+   </Route>
+   ```
+3. (Opcional) Sumar el link al menú en `routes/nav.ts`:
+   ```ts
+   { label: "Perfil", path: paths.profile }
+   ```
 
 ### Pública (login/registro/recuperar)
 
