@@ -1,22 +1,9 @@
 import { useState } from "react";
+import type { FormProps, RegisterFormErrors, RegisterFormValues } from "../../types/formLogin_register.types";
 
-export type RegisterFormValues = {
-  email: string;
-  password: string;
-};
-
-type RegisterFormErrors = {
-  email?: string;
-  password?: string;
-};
-
-type FormProps = {
-  endpoint: string;
-  onSuccess?: (data: unknown) => void;
-  submitLabel?: string;
-};
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const REGISTER_ENDPOINT = `${import.meta.env.VITE_API_URL ?? ""}/auth/register`;
 
 function validateEmail(value: string): string | undefined {
   const trimmed = value.trim();
@@ -37,7 +24,6 @@ function validatePassword(value: string): string | undefined {
 }
 
 export function Form({
-  endpoint,
   onSuccess,
   submitLabel = "Crear cuenta",
 }: FormProps) {
@@ -85,7 +71,7 @@ export function Form({
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(REGISTER_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
