@@ -4,7 +4,7 @@ export type RegisterFormValues = {
   email: string;
   password: string;
 };
-// otro mas 
+
 // prueba nueva
 type RegisterFormErrors = {
   email?: string;
