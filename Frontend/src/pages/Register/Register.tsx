@@ -10,7 +10,7 @@ export const Register = () => {
     console.log("Usuario registrado:", data);
     setRegistered(true);
   };
-
+// hola luis 
   if (registered) {
     return (
       <main>
