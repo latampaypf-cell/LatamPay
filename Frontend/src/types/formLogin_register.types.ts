@@ -8,7 +8,12 @@ export type RegisterFormErrors = {
   password?: string;
 };
 
+export type FormSuccessPayload = {
+  values: RegisterFormValues;
+  data: unknown;
+};
+
 export type FormProps = {
-  onSuccess?: (data: unknown) => void;
+  onSuccess?: (payload: FormSuccessPayload) => void;
   submitLabel?: string;
 };

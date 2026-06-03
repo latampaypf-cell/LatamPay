@@ -71,6 +71,19 @@ export function Form({
 
     setIsSubmitting(true);
     try {
+      // ============================================================
+      // ⚠️ MOCK TEMPORAL — BORRAR CUANDO EL BACKEND ESTÉ LISTO ⚠️
+      // Simula una respuesta exitosa del backend para poder probar
+      // el flujo completo de registro + auto-login sin servidor.
+      // Para restaurar: borrar este bloque y descomentar el de abajo.
+      // ============================================================
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const data = { id: "mock-id", email: payload.email };
+      // ============================================================
+      // FIN DEL MOCK TEMPORAL
+      // ============================================================
+
+      /* ===== CÓDIGO REAL — DESCOMENTAR CUANDO HAYA BACKEND =====
       const response = await fetch(REGISTER_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -87,10 +100,11 @@ export function Form({
         setServerError(message);
         return;
       }
+      ===== FIN CÓDIGO REAL ===== */
 
       setValues({ email: "", password: "" });
       setTouched({ email: false, password: false });
-      onSuccess?.(data);
+      onSuccess?.({ values: payload, data });
     } catch {
       setServerError("Error de red. Verificá tu conexión.");
     } finally {
