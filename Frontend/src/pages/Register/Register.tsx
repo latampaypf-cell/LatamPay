@@ -14,7 +14,7 @@ export const Register = () => {
   if (registered) {
     return (
       <main>
-        <h1>Cuenta creada</h1>
+        <h1>Cuenta</h1>
         <p>Tu cuenta fue creada con éxito. Ya podés iniciar sesión.</p>
         <Link to="/login">Ir al login</Link>
       </main>
