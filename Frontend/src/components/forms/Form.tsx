@@ -5,7 +5,7 @@ export type RegisterFormValues = {
   password: string;
 };
 
-
+// prueba
 type RegisterFormErrors = {
   email?: string;
   password?: string;
