@@ -3,12 +3,12 @@ import { PrivateNavbar } from "../components/navbar/PrivateNavbar";
 
 export function PrivateLayout() {
   return (
-    <div className="private-layout">
+    <div className="min-h-screen bg-slate-950 text-white">
       <header>
         <PrivateNavbar />
       </header>
 
-      <main>
+      <main className="pt-20">
         <Outlet />
       </main>
     </div>

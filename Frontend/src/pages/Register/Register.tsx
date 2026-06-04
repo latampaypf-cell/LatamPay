@@ -57,7 +57,7 @@ export const Register = () => {
       </div>
 
       {/* Layout dividido */}
-      <div className="relative z-10 container mx-auto grid min-h-screen items-center gap-12 px-6 py-16 lg:grid-cols-2">
+      <div className="relative z-10 container mx-auto grid min-h-screen items-center gap-10 px-8 pt-1 pb-16 lg:grid-cols-2">
 
         {/* Panel izquierdo */}
         <motion.div
