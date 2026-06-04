@@ -31,7 +31,7 @@ export function PublicNavbar({
         w-full
         border-b
         border-white/10
-        bg-slate-950/70
+        bg-slate-950
         backdrop-blur-xl
       "
     >
