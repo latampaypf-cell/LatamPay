@@ -9,18 +9,23 @@ import { PrivateLayout } from "../layouts/PrivateLayout";
 import { PrivateRoute } from "./guards/PrivateRoute";
 import { PublicRoute } from "./guards/PublicRoute";
 import { paths } from "./paths";
+import { Support } from "../pages/support/Support";
+import { PublicLayout } from "../layouts/PublicLayaout";
 
 export function AppRouter() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          <Route path={paths.home} element={<Home />} />
 
           <Route element={<PublicRoute />}>
+           <Route element={<PublicLayout />}>
+          <Route path={paths.home} element={<Home />} />
             <Route path={paths.login} element={<Login />} />
             <Route path={paths.register} element={<Register />} />
+            <Route path={paths.support} element={<Support />} />
           </Route>
+           </Route>
 
           <Route element={<PrivateRoute />}>
             <Route element={<PrivateLayout />}>

@@ -8,3 +8,15 @@ export type NavItem = {
 export const privateNavItems: NavItem[] = [
   { label: "Dashboard", path: paths.dashboard },
 ];
+
+
+export const publicNavItems = [
+  {
+    label: "Inicio",
+    path: paths.home,
+  },
+  {
+    label: "Soporte",
+    path: paths.support,
+  },
+];
