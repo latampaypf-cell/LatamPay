@@ -102,6 +102,9 @@ export function Form({
     }
   }
 
+  const inputClass =
+    "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 backdrop-blur-xl transition focus:border-cyan-500/50 focus:outline-none focus:ring-1 focus:ring-cyan-500/30 disabled:opacity-50";
+
   return (
     <form
       noValidate
@@ -112,13 +115,16 @@ export function Form({
     >
       {children}
 
-      <div>
-        <label htmlFor="register-email">Email</label>
+      <div className="mt-4">
+        <label htmlFor="register-email" className="mb-1.5 block text-sm text-slate-300">
+          Email
+        </label>
         <input
           id="register-email"
           name="email"
           type="email"
           autoComplete="email"
+          placeholder="tu@email.com"
           value={values.email}
           onChange={handleChange("email")}
           onBlur={handleBlur("email")}
@@ -126,21 +132,25 @@ export function Form({
           aria-describedby={errors.email && touched.email ? "register-email-error" : undefined}
           disabled={isSubmitting}
           required
+          className={inputClass}
         />
         {errors.email && touched.email && (
-          <p id="register-email-error" role="alert">
+          <p id="register-email-error" role="alert" className="mt-1 text-xs text-red-400">
             {errors.email}
           </p>
         )}
       </div>
 
-      <div>
-        <label htmlFor="register-password">Contraseña</label>
+      <div className="mt-4">
+        <label htmlFor="register-password" className="mb-1.5 block text-sm text-slate-300">
+          Contraseña
+        </label>
         <input
           id="register-password"
           name="password"
           type="password"
           autoComplete="new-password"
+          placeholder="Mínimo 8 caracteres"
           value={values.password}
           onChange={handleChange("password")}
           onBlur={handleBlur("password")}
@@ -148,21 +158,26 @@ export function Form({
           aria-describedby={errors.password && touched.password ? "register-password-error" : undefined}
           disabled={isSubmitting}
           required
+          className={inputClass}
         />
         {errors.password && touched.password && (
-          <p id="register-password-error" role="alert">
+          <p id="register-password-error" role="alert" className="mt-1 text-xs text-red-400">
             {errors.password}
           </p>
         )}
       </div>
 
       {serverError && (
-        <p id="register-server-error" role="alert">
+        <p id="register-server-error" role="alert" className="mt-3 text-sm text-red-400">
           {serverError}
         </p>
       )}
 
-      <button type="submit" disabled={isSubmitting || disableSubmit}>
+      <button
+        type="submit"
+        disabled={isSubmitting || disableSubmit}
+        className="mt-6 w-full rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-slate-950 transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
+      >
         {isSubmitting ? "Enviando..." : submitLabel}
       </button>
     </form>
