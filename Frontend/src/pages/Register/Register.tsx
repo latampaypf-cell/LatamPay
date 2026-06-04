@@ -26,6 +26,19 @@ export const Register = () => {
     navigate(paths.dashboard, { replace: true });
   };
 
+<<<<<<< HEAD
+  if (registered) {
+    return (
+      <main>
+        <h1>Cuenta</h1>
+        <p>Tu cuenta fue creada con éxito. Ya podés iniciar sesión.</p>
+        <Link to="/login">Ir al login</Link>
+      </main>
+    );
+  }
+
+=======
+>>>>>>> developer
   return (
     <main>
       <h1>Crear cuenta</h1>
